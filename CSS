@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <style>
+        .container {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  gap: 5px;
+  margin-bottom: 20px;
+}
+
+.cell {
+  width: 100px;
+  height: 100px;
+  background-color: #eee;
+  border: 1px solid #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cell:hover {
+  background-color: #ddd;
+}
+
+.status {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.btn {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Tic Tac Toe</h1>
+        <div id="board" class="board">
+            <div class="cell" onclick="handleMove(0)"></div>
+            <div class="cell" onclick="handleMove(1)"></div>
+            <div class="cell" onclick="handleMove(2)"></div>
+            <div class="cell" onclick="handleMove(3)"></div>
+            <div class="cell" onclick="handleMove(4)"></div>
+            <div class="cell" onclick="handleMove(5)"></div>
+            <div class="cell" onclick="handleMove(6)"></div>
+            <div class="cell" onclick="handleMove(7)"></div>
+            <div class="cell" onclick="handleMove(8)"></div>
+        </div>
+        <div id="status" class="status"></div>
+        <button id="restartBtn" class="btn" onclick="restartGame()">Restart</button>
+    </div>
+
+<script>
+    let currentPlayer = 'X';
+        let moves = ['', '', '', '', '', '', '', '', ''];
+        const winningCombos = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Horizontal
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Vertical
+            [0, 4, 8], [2, 4, 6]             // Diagonal
+        ];
+
+        const cells = document.querySelectorAll('.cell');
+        const status = document.getElementById('status');
+
+        function handleMove(index) {
+            if (!moves[index]) {
+                moves[index] = currentPlayer;
+                cells[index].innerText = currentPlayer;
+
+                if (checkWin()) {
+                    status.innerText = `${currentPlayer} wins!`;
+                    disableBoard();
+                } else if (checkDraw()) {
+                    status.innerText = 'It\'s a draw!';
+                } else {
+                    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                    status.innerText = `Current player: ${currentPlayer}`;
+                }
+            }
+        }
+
+        function checkWin() {
+            return winningCombos.some(combo => {
+                return combo.every(index => moves[index] === currentPlayer);
+            });
+        }
+
+        function checkDraw() {
+            return moves.every(move => move !== '');
+        }
+
+        function disableBoard() {
+            cells.forEach(cell => cell.onclick = null);
+        }
+
+        function restartGame() {
+            currentPlayer = 'X';
+            moves = ['', '', '', '', '', '', '', '', ''];
+            cells.forEach(cell => {
+                cell.innerText = '';
+                cell.onclick = function () {
+                    const index = Array.from(cells).indexOf(cell);
+                    handleMove(index);
+                };
+            });
+            status.innerText = `Current player: ${currentPlayer}`;
+        }
+
+</script></body>
+
+</html>
